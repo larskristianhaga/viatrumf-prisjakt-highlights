@@ -14,3 +14,15 @@ Needs to be installed manually for now.
 * Click `Load unpacked` and navigate to the place where you saved the repo, and select the folder `extension`.
 * ???
 * Profit
+
+### Images
+
+It should go from looking like this:
+
+
+![Example image before](example-image-before.png)
+
+To look like this:
+
+
+![Example image result](example-image-result.png)
