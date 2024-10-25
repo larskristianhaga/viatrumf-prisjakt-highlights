@@ -254,8 +254,6 @@ const shops = [
     "Cabin Campers",
     "Fraxx",
 ];
-
-// Create a 2D array to store the shop name and the URL
 const shopURLs = [
     "/cashback/blivakker-trumf",
     "/cashback/trumfhotels-no",
@@ -513,148 +511,127 @@ const shopURLs = [
     "/cashback/fraxx-trumf",
 ];
 
-// Function to replace the sell button
-function highlightShop() {
-    // Only do search on the DOM if the url is on a product page, like so; https://www.prisjakt.no/product.php?p=8053700
-    if (!window.location.href.includes("product.php")) {
-        console.log("Not a product page, returning");
-        return;
-    }
+const baseViaTrumfURL = "https://viatrumf.no/";
 
-    // If the button for show more prices is found, click it
+/**
+ * Function to add a button to the shop element that will redirect to ViaTrumf
+ * @param {Element} button
+ * @returns {void}
+ */
+function addViaTrumfButton(button) {
+    button.textContent = 'Gå til ViaTrumf';
+    button.style.backgroundColor = 'green';
+}
+
+/**
+ * Function to check if the button for show more prices exists and click it.
+ *
+ * @param {Document} document
+ * @returns {void}
+ */
+function checkIfShowMorePricesButtonExistsAndClick(document) {
     const showMoreButton = document.querySelector("#price-list-panel > div:nth-child(3) > button > span");
 
     if (showMoreButton) {
         console.log("Button for show more prices found, clicking it");
         showMoreButton.click();
     }
+}
 
-    // If the button for show stores without direct link is found, click it. It has aria-label="Vis flere butikker"
+/**
+ * Function to check if the button for show more stores exists and click it.
+ *
+ * @param {Document} document
+ * @returns {void}
+ */
+function checkIfShowMoreStoresButtonExistsAndClick(document) {
     const showMoreStoresButton = document.querySelector('[aria-label="Vis alle tilbud uten direktelenke"]');
 
     if (showMoreStoresButton) {
         console.log("Button for show more stores found, clicking it");
         showMoreStoresButton.click();
     }
-
-    // Get the primary price list where all the shops and prices are listed
-    const primaryPriceList = document.querySelector('[data-testid="primary-price-list"]');
-
-    if (primaryPriceList) {
-        // Iterate over the children of the primary price list
-        primaryPriceList.childNodes.forEach((child, primaryPriceListShopIndex) => {
-                // Inside this tree we are looking for an element with the class name "StoreInfoTitle-sc-0-1"
-                const storeInfoTitle = child.querySelector('.StoreInfoTitle-sc-0-1');
-
-                // If the element is found, check if the text content is equal to any in the array.
-                if (storeInfoTitle) {
-                    // Check if the storeInfoTitle text content is equal to any of the shops in the array
-                    const shopName = storeInfoTitle.textContent.toLowerCase();
-
-                    // Also check if the storeInfoTitle text content contains any of the shops in the array
-                    shops.forEach((shop, shopListIndex) => {
-                        if (shopName.includes(shop.toLowerCase())) {
-                            // console.log(shop);
-                            // If the shop is found, add a class to the parent element
-                            child.classList.add('highlighted-shop');
-
-                            const card = document.querySelectorAll('.Card--p51vb4');
-                            // console.log(card);
-
-                            const actuallCard = card.item(primaryPriceListShopIndex);
-                            // console.log(actuallCard);
-
-                            if (actuallCard) {
-                                // console.log("Card found");
-                                // Add two new CSS styles to the card
-                                actuallCard.style.border = '2px solid green';
-                                actuallCard.style.borderRadius = '10px';
-
-                                // Get button element that has the aria label "Vis i butikk"
-                                const button = actuallCard.querySelector('[aria-label="Vis i butikk"]');
-                                if (button) {
-                                    // Change the text content of the button
-                                    button.textContent = 'Gå til ViaTrumf';
-                                    button.style.backgroundColor = 'green';
-
-                                    // Inject Javascript to when I click the button it will redirect to ViaTrumf
-                                    button.onclick = function () {
-                                        // Get the shop url from the shopURLs array
-                                        window.location.href = "https://viatrumf.no/" + shopURLs.at(shopListIndex);
-                                    }
-                                }
-
-                            }
-                        }
-                    });
-                }
-            }
-        );
-    }
 }
 
-/*
-const getAllShopsFromViaTrumf = () => {
-    let shops = [[]];
-
-    const result = fetch("https://viatrumf.no/category/paged/all/1000/0/")
-        .then(data => {
-            // Get all the <a> tags from the response
-            console.log(data.body);
-
-            // Data.body is a readable stream, so we need to convert it to a string
-            const reader = data.body.getReader();
-            const decoder = new TextDecoder('utf-8');
-
-            reader.read().then(function processText({done, value}) {
-                if (done) {
-                    console.log("Stream complete");
-                    return;
-                }
-
-                // Convert the value to a string
-                const text = decoder.decode(value, {stream: true});
-
-                // Find the start and end index of the shop names
-                const startIndex = text.indexOf('<div class="store-name">');
-                const endIndex = text.indexOf('</div>', startIndex);
-
-                // Get the shop name
-                const shopName = text.slice(startIndex + 24, endIndex);
-
-                // Add the shop name to the shops array
-                shops.push([shopName]);
-
-                // Continue reading the stream
-                return reader.read().then(processText);
-            });
-
-            console.log(shops);
-
-        });
-}
+/**
+ * Function to style the shop element if it is eligible for ViaTrumf
+ * @param {Element} card
+ * @returns {void}
  */
+function styleViaTrumfEligibleCard(card) {
+    card.style.border = '2px solid green';
+    card.style.borderRadius = '10px';
+}
 
-// Function to observe DOM changes
-function observeDOMChanges() {
-    const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-            if (mutation.addedNodes.length) {
-                highlightShop();
-                // getAllShopsFromViaTrumf();
+
+/**
+ * Function to highlight the shop element if it is eligible for ViaTrumf.
+ *
+ * @returns {void}
+ */
+function highlightShop() {
+    // Only do search on the DOM if the url is on a product page, like so; https://www.prisjakt.no/product.php?p=8053700
+    if (!window.location.href.includes("product.php?p=")) {
+        console.log("Not a product page, returning");
+        return;
+    }
+
+    checkIfShowMorePricesButtonExistsAndClick(document);
+    checkIfShowMoreStoresButtonExistsAndClick(document);
+
+    // Get all elements that have a class name starting with "StoreInfoTitle".
+    const storeTitleListElements = document.querySelectorAll('[class^="StoreInfoTitle"]');
+
+    storeTitleListElements.forEach((storeTitleElement, index) => {
+        let storeName = storeTitleElement.textContent.toLowerCase();
+
+        if (storeName.includes(".")) {
+            console.log("Shop name contains a dot: " + storeName);
+            storeName = storeName.split(".")[0];
+        }
+
+        shops.forEach((shopNameFromList, shopIndex) => {
+            const shopNameFromListLower = shopNameFromList.toLowerCase();
+
+            if (storeName.includes(shopNameFromListLower)) {
+                // Go backwards in the DOM tree to find the parent element that has data-test="PriceRow"
+                let parentElement = storeTitleElement.parentElement;
+                while (parentElement && !parentElement.hasAttribute("data-test")) {
+                    parentElement = parentElement.parentElement;
+                }
+
+                if (parentElement) {
+                    styleViaTrumfEligibleCard(parentElement);
+
+                    const button = parentElement.querySelector('[aria-label="Vis i butikk"]');
+                    if (button) {
+                        addViaTrumfButton(button);
+                        button.onclick = function () {
+                            window.open(baseViaTrumfURL + shopURLs.at(shopIndex));
+                        }
+                    }
+                }
             }
-        });
+        })
     });
+}
+
+/**
+ * Function to observe DOM changes
+ * @returns {void}
+ */
+function observeDOMChanges() {
+    const observer = new MutationObserver((mutations) => mutations.forEach(() => highlightShop()));
 
     observer.observe(document.body, {
-        childList: true,
-        subtree: true,
+        childList: true
     });
 }
 
-// Run the function when the window is fully loaded
-window.addEventListener('load', () => {
-    highlightShop();
-    // getAllShopsFromViaTrumf();
+/**
+ * Function to run when the window is loaded
+ * @returns {void}
+ */
+window.onload = () => {
     observeDOMChanges();
-});
+};
