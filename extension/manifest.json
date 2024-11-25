@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "ViaTrumf-Prisjakt-Highlights",
+  "name": "Prisjakt Highlights",
   "version": "1.0",
-  "description": "Highlights products on Prisjakt.no that are eligible for ViaTrumf cashback.",
+  "description": "Highlights products on Prisjakt.no that are eligible for ViaTrumf cashback, or SAS Online Shopping points.",
   "icons": {
   },
   "permissions": [
