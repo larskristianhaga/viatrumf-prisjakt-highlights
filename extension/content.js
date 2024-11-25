@@ -118,6 +118,9 @@ async function highlightShop() {
     checkIfShowMorePricesButtonExistsAndClick(document);
     checkIfShowMoreStoresButtonExistsAndClick(document);
 
+    // Sleep for 1 second to make sure the elements are loaded
+    await new Promise(r => setTimeout(r, 1000));
+
     const priceRowElements = document.querySelectorAll('[data-test="PriceRow"]');
 
     priceRowElements.forEach((priceRowElement) => {
