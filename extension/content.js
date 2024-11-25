@@ -133,7 +133,7 @@ async function highlightShop() {
         const viaTrumfShop = viaTrumfShopsList.data.find(shop => shop.name.toLowerCase().includes(shopName));
 
         if (sasShop && viaTrumfShop) {
-            console.log("Shop found in both SAS and ViaTrumf:", shopName);
+            console.debug("Shop found in both SAS and ViaTrumf:", shopName);
             styleEligibleCard(priceRowElement, "#FFD700");
 
             const goToStoreButton = priceRowElement.querySelector('[aria-label="Vis i butikk"]');
