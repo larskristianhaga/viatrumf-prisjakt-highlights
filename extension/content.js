@@ -127,7 +127,7 @@ async function highlightShop() {
             shopName = shopName.split(".")[0];
         }
 
-        console.debug("Store name:", shopName);
+        console.debug("Store name: ", shopName);
 
         const sasShop = sasShopsList.data.find(shop => shop.name.toLowerCase().includes(shopName));
         const viaTrumfShop = viaTrumfShopsList.data.find(shop => shop.name.toLowerCase().includes(shopName));
