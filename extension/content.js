@@ -119,7 +119,7 @@ async function highlightShop() {
 
     const priceRowElements = document.querySelectorAll('[data-test="PriceRow"]');
 
-    priceRowElements.forEach((priceRowElement, index) => {
+    priceRowElements.forEach((priceRowElement) => {
         let shopName = priceRowElement.querySelector('[class^="StoreInfoTitle"]').textContent.toLowerCase();
 
         if (shopName.includes(".")) {
