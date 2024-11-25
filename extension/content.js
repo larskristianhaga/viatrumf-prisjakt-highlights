@@ -132,7 +132,19 @@ async function highlightShop() {
         const sasShop = sasShopsList.data.find(shop => shop.name.toLowerCase().includes(shopName));
         const viaTrumfShop = viaTrumfShopsList.data.find(shop => shop.name.toLowerCase().includes(shopName));
 
-        // ViaTrumf is last since it should override SAS.
+        if (sasShop && viaTrumfShop) {
+            console.log("Shop found in both SAS and ViaTrumf:", shopName);
+            styleEligibleCard(priceRowElement, "#FFD700");
+
+            const goToStoreButton = priceRowElement.querySelector('[aria-label="Vis i butikk"]');
+            overwriteGoToStoreButtonColor(goToStoreButton, "#FFD700");
+
+            const goToStoreButtonChild = goToStoreButton.firstChild;
+            overwriteGoToStoreButtonText(goToStoreButtonChild, "SAS EuroBonus & ViaTrumf");
+
+            return;
+        }
+
         if (sasShop) {
             console.debug("SAS shop found:", shopName);
             styleEligibleCard(priceRowElement, sasConfig.color);
@@ -145,6 +157,8 @@ async function highlightShop() {
 
             const goToStoreButtonChild = goToStoreButton.firstChild;
             overwriteGoToStoreButtonText(goToStoreButtonChild, sasConfig.text);
+
+            return;
         }
 
         if (viaTrumfShop) {
@@ -159,6 +173,12 @@ async function highlightShop() {
 
             const goToStoreButtonChild = goToStoreButton.firstChild;
             overwriteGoToStoreButtonText(goToStoreButtonChild, viaTrumfConfig.text);
+
+            return;
+        }
+
+        if (!sasShop && !viaTrumfShop) {
+            console.debug("Shop not found in SAS or ViaTrumf:", shopName);
         }
     });
 }
