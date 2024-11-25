@@ -97,6 +97,7 @@ function overwriteGoToStoreButtonLink(button, url) {
 
 function overwriteGoToStoreButtonColor(button, color) {
     button.style.backgroundColor = color;
+    button.style.visibility = "visible";
 }
 
 /**
